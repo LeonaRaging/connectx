@@ -1,12 +1,12 @@
 from kaggle_environments import make
-from my_agent import my_agent
+from pure_minimax import pure_minimax
 
 # Initialize the environment
 env = make("connectx", debug=True)
 
 # Run a game
 # Your agent is in the first position, "random" is in the second
-env.run([my_agent, "random"])
+env.run([pure_minimax, "random"])
 
 with open("game.html", "w") as f:
     f.write(env.render(mode="html"))
