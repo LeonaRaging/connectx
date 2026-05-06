@@ -1,0 +1,16 @@
+from kaggle_environments import make
+from my_agent import my_agent
+
+# Initialize the environment
+env = make("connectx", debug=True)
+
+# Run a game
+# Your agent is in the first position, "random" is in the second
+env.run([my_agent, "random"])
+
+with open("game.html", "w") as f:
+    f.write(env.render(mode="html"))
+
+# Print the result
+print("Game finished!")
+print(f"Winner: {env.state[0].reward}") # None if tie, 1 if P1 wins, 2 if P2 wins
