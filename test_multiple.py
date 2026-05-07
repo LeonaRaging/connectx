@@ -1,9 +1,10 @@
 from kaggle_environments import make
+from old_minimax import old_minimax
 from pure_minimax import pure_minimax
 
 env = make("connectx", debug=False)
 
-trainer = env.train([None, "random"])
+trainer = env.train([None, old_minimax])
 
 wins = 0
 losses = 0

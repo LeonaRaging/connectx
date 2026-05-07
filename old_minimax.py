@@ -65,11 +65,8 @@ def dfs(depth):
                    if board[0][col] == 0]
     bst_val = -INF if is_player else INF
     bst_col = None
-    val = evaluate()
-    if abs(val) >= 9000:
-        return val, 0
     if depth == MAX_DEPTH:
-        return val, 0
+        return evaluate(), 0
     for j in valid_moves:
         i = 0
         while i + 1 < ROWS and board[i + 1][j] == 0:
@@ -88,7 +85,7 @@ def dfs(depth):
     # print(bst_col, file=f)
     return bst_val, bst_col
 
-def pure_minimax(observation, configuration):
+def old_minimax(observation, configuration):
     global ALL_WINDOWS, ROWS, COLS, INAROW, board, player_id, opponent_id, f
 
     f = open("log.txt", "a")

@@ -7,7 +7,7 @@ INAROW = None
 ALL_WINDOWS = None
 player_id = None
 opponent_id = None
-MAX_DEPTH = 3
+MAX_DEPTH = 7
 INF = 1e9
 f = None
 
@@ -56,39 +56,66 @@ def evaluate():
     
     return total_score
 
-def dfs(depth):
+def dfs(depth, alpha, beta):
     # print(board, file=f)
     # f.write("\n\n")
     is_player = depth % 2 == 0
     current_value = player_id if is_player else opponent_id
+
     valid_moves = [col for col in range(COLS)
                    if board[0][col] == 0]
+    
+    valid_moves.sort(key=lambda c: abs(c - COLS // 2))
+    
     bst_val = -INF if is_player else INF
     bst_col = None
     val = evaluate()
-    if abs(val) >= 9000:
-        return val, 0
-    if depth == MAX_DEPTH:
-        return val, 0
-    for j in valid_moves:
-        i = 0
-        while i + 1 < ROWS and board[i + 1][j] == 0:
-            i += 1
-        board[i][j] = current_value
-        val, _ = dfs(depth + 1)
-        if is_player:
+    
+    if abs(val) >= 9000 or depth == MAX_DEPTH or not valid_moves:
+        return val, None
+    
+    if is_player:
+        for j in valid_moves:
+
+            i = ROWS - 1
+            while board[i][j] != 0:
+                i -= 1
+            board[i][j] = current_value
+            
+            val, _ = dfs(depth + 1, alpha, beta)
+            
+            board[i][j] = 0
+            
             if val > bst_val:
                 bst_val = val
                 bst_col = j
-        else:
+            
+            alpha = max(alpha, bst_val)
+            if beta <= alpha:
+                break
+        return bst_val, bst_col
+
+    else:
+        for j in valid_moves:
+            i = ROWS - 1
+            while board[i][j] != 0:
+                i -= 1
+            board[i][j] = current_value
+            
+            val, _ = dfs(depth + 1, alpha, beta)
+            
+            board[i][j] = 0
+            
             if val < bst_val:
                 bst_val = val
                 bst_col = j
-        board[i][j] = 0
-    # print(bst_col, file=f)
+            
+            beta = min(beta, bst_val)
+            if beta <= alpha:
+                break
     return bst_val, bst_col
 
-def pure_minimax(observation, configuration):
+def alpha_beta_minimax(observation, configuration):
     global ALL_WINDOWS, ROWS, COLS, INAROW, board, player_id, opponent_id, f
 
     f = open("log.txt", "a")
@@ -102,7 +129,7 @@ def pure_minimax(observation, configuration):
 
     # print("Player ID: ", player_id, file=f)
 
-    _, col = dfs(0)
+    _, col = dfs(0, -INF, INF)
     f.close()
     return col
 
