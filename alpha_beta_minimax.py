@@ -7,9 +7,11 @@ INAROW = None
 ALL_WINDOWS = None
 player_id = None
 opponent_id = None
-MAX_DEPTH = 7
+MAX_DEPTH = 9
 INF = 1e9
 f = None
+
+transposition_table = {}
 
 # Get every INAROW segment from all 4 directions
 def get_all_windows():
@@ -43,7 +45,7 @@ def evaluate():
         empty = cells.count(0)
 
         if p_count == 4:
-            total_score += 10000
+            return INF
         elif p_count == 3 and empty == 1:
             total_score += 50
         elif p_count == 2 and empty == 2:
@@ -52,11 +54,17 @@ def evaluate():
         if o_count == 3 and empty == 1:
             total_score -= 80
         elif o_count == 4:
-            total_score -= 10000
+            return -INF
     
     return total_score
 
 def dfs(depth, alpha, beta):
+    board_hash = board.tobytes()
+    remaining_depth = MAX_DEPTH - depth
+    if board_hash in transposition_table:
+        cached_depth, cached_val = transposition_table[board_hash]
+        if cached_depth >= remaining_depth:
+            return cached_val, None
     # print(board, file=f)
     # f.write("\n\n")
     is_player = depth % 2 == 0
@@ -70,8 +78,7 @@ def dfs(depth, alpha, beta):
     bst_val = -INF if is_player else INF
     bst_col = None
     val = evaluate()
-    
-    if abs(val) >= 9000 or depth == MAX_DEPTH or not valid_moves:
+    if abs(val) == INF or depth == MAX_DEPTH or not valid_moves:
         return val, None
     
     if is_player:
@@ -113,6 +120,7 @@ def dfs(depth, alpha, beta):
             beta = min(beta, bst_val)
             if beta <= alpha:
                 break
+    transposition_table[board_hash] = (bst_val, remaining_depth)
     return bst_val, bst_col
 
 def alpha_beta_minimax(observation, configuration):
