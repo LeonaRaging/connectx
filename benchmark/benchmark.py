@@ -4,10 +4,10 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 import subprocess
 import time
-from src.alpha_beta_minimax import alpha_beta_minimax
+from src.alpha_beta_bitsboard_minimax import alpha_beta_bitsboard_minimax
 
 TEST_PATHS = ["Test_L1_R1", "Test_L1_R2", "Test_L1_R3", "Test_L2_R1", "Test_L2_R2", "Test_L3_R1"]
-NUMBER_OF_TEST = 100
+NUMBER_OF_TEST = 1000
 
 class Observation:
     def __init__(self, board, mark):
@@ -77,7 +77,7 @@ for TEST_PATH in TEST_PATHS:
 
             observation = build_position(position)
 
-            my_move = alpha_beta_minimax(
+            my_move = alpha_beta_bitsboard_minimax(
                 observation,
                 configuration
             )
@@ -91,7 +91,7 @@ for TEST_PATH in TEST_PATHS:
 
             current_test += 1
 
-            if (time.time() - start_time >= 10) or (current_test == NUMBER_OF_TEST):
+            if (time.time() - start_time >= 30) or (current_test == NUMBER_OF_TEST):
                 break
         with open(str(CURRENT_DIR) + "/benchmark_results/benchmark.txt", "a") as f:
             accuracy = 100 * correct_moves / current_test
