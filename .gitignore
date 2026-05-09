@@ -2,3 +2,4 @@ __pycache__
 .vscode
 game.html
 log.txt
+benchmark/benchmark_results/benchmark.txt

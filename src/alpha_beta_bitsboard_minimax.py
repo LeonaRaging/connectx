@@ -35,18 +35,9 @@ def print_board(agent_pos, opp_pos):
         f.write("\n")
 
 def check_win(pos):
-    # Horizontal
-    m = pos & (pos >> 7)
-    if m & (m >> 14): return True
-    # Diagonal 1
-    m = pos & (pos >> 6)
-    if m & (m >> 12): return True
-    # Diagonal 2
-    m = pos & (pos >> 8)
-    if m & (m >> 16): return True
-    # Vertical
-    m = pos & (pos >> 1)
-    if m & (m >> 2): return True
+    for shift in [7, 6, 8, 1]:
+        m = pos & (pos >> shift)
+        if m & (m >> (2 * shift)): return True
     return False
 
 def count_possible_4s(pos_mask):
@@ -65,11 +56,21 @@ def count_possible_4s(pos_mask):
     return count
 
 def evaluate_bitwise(agent_pos, opp_pos):
-    agent_possible = count_possible_4s(BOARD_MASK & ~opp_pos)
+    score = 0
     
-    opp_possible = count_possible_4s(BOARD_MASK & ~agent_pos)
+    score += (agent_pos & CENTER_MASK).bit_count() * 3
+    score -= (opp_pos & CENTER_MASK).bit_count() * 3
     
-    return agent_possible - opp_possible
+    for shift in [1, 7, 8, 6]:
+        p_pairs = agent_pos & (agent_pos >> shift)
+        score += p_pairs.bit_count()                
+        score += (p_pairs & (p_pairs >> shift)).bit_count() * 5 
+        
+        o_pairs = opp_pos & (opp_pos >> shift)
+        score -= o_pairs.bit_count()
+        score -= (o_pairs & (o_pairs >> shift)).bit_count() * 5
+        
+    return score
 
 def dfs(depth, alpha, beta, agent_pos, opp_pos, heights):
     # print_board(agent_pos, opp_pos)
