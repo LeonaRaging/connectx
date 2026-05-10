@@ -3,15 +3,15 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from src.alpha_beta_minimax import alpha_beta_minimax
-from src.alpha_beta_bitsboard_minimax_iterative_deepening import alpha_beta_bitsboard_minimax_iterative_deepening
+from src.alpha_beta_bitsboard_minimax_iterative_deepening_null_window import alpha_beta_bitsboard_minimax_iterative_deepening_null_window
+from src.alpha_beta_bitsboard_minimax import alpha_beta_bitsboard_minimax
 
 # Initialize the environment
 env = make("connectx", debug=True)
 
 # Run a game
 # Your agent is in the first position, "random" is in the second
-env.run([alpha_beta_bitsboard_minimax_iterative_deepening, alpha_beta_minimax])
+env.run([alpha_beta_bitsboard_minimax, alpha_beta_bitsboard_minimax_iterative_deepening_null_window])
 
 with open("game.html", "w") as f:
     f.write(env.render(mode="html"))
