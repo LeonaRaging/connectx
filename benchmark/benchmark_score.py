@@ -9,7 +9,7 @@ from src.best import best
 
 CURRENT_DIR = Path(__file__).resolve().parent
 
-TEST_PATH = "Test_L3_R1"
+TEST_PATH = "Test_L1_R2"
 
 class Observation:
     def __init__(self, board, mark):
@@ -46,7 +46,7 @@ with open(str(CURRENT_DIR) + "/data_set/" + TEST_PATH) as f:
     for i, line in enumerate(f):
         position, expected = line.split()
 
-        if (len(position) < 20):
+        if (len(position)) < 14:
             continue
 
         observation = build_position(position)
@@ -55,20 +55,17 @@ with open(str(CURRENT_DIR) + "/data_set/" + TEST_PATH) as f:
 
         score = best(observation, configuration)
 
-        # if time.time() - start_time > 2:
-        #     print("Fail")
-        # else:
-        #     print("Pass")
+        print(time.time() - start_time)
 
         if score == int(expected):
             correct += 1
-        else:
-            print(position + ' ' + str(score) + ' ' + expected)
+        # else:
+        print(position + ' ' + str(score) + ' ' + expected)
 
-        break
+        # break
         total = i + 1
 
-        if time.time() - start_time > 2:
-            break
-    # print(100 * correct / total)
-    # print(total)
+        # if time.time() - start_time > 2:
+        #     break
+    print(100 * correct / total)
+    print(total)

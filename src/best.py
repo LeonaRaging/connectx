@@ -9,6 +9,9 @@ mask = 0
 column_order = [0] * WIDTH
 transposition_table = {}
 
+def move_score(move):
+    return compute_winning_position(current_position | move, mask).bit_count()
+
 for i in range(WIDTH):
     column_order[i] = WIDTH // 2 + (1 - 2 * (i % 2)) * (i + 1) // 2
 
@@ -163,29 +166,52 @@ def negamax(alpha, beta):
     position_key = key()
 
     if position_key in transposition_table:
-        max = transposition_table[position_key]
+        bound_type, val = transposition_table[position_key]
+
+        if bound_type == "LOWER":
+            if alpha < val:
+                alpha = val
+        else:
+            if beta > val:
+                beta = val
+    
+    if alpha >= beta:
+        return alpha
 
     if beta > max:
         beta = max
         if alpha >= beta:
             return beta
+        
+    moves_list = []
 
     for x in range(WIDTH):
-        if next & column_mask(column_order[x]):
-            prev_position = current_position
-            prev_mask = mask
+        col = column_order[x]
 
-            play(column_order[x])
+        move = next & column_mask(col)
 
-            score = -negamax(-beta, -alpha)
+        if move:
+            moves_list.append((move_score(move), col))
+    
+    moves_list.sort(reverse=True)
 
-            un_play(prev_position, prev_mask)
+    for _, col in moves_list:
+        prev_position = current_position
+        prev_mask = mask
 
-            if score >= beta:
-                return score
-            if score > alpha:
-                alpha = score
-    transposition_table[position_key] = alpha
+        play(col)
+
+        score = -negamax(-beta, -alpha)
+
+        un_play(prev_position, prev_mask)
+
+        if score >= beta:
+            transposition_table[position_key] = ("LOWER", score)
+            return score
+
+        if score > alpha:
+            alpha = score
+    transposition_table[position_key] = ("UPPER", alpha)
     return alpha
 
 def solve():
