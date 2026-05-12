@@ -1,4 +1,4 @@
-from alpha_beta_bitsboard_minimax import alpha_beta_bitsboard_minimax
+from mcts import mcts
 from best import best
 from opening_book import opening_book
 
@@ -7,6 +7,6 @@ def main(observation, configuration):
     if moves < 8:
         return opening_book(observation, configuration)
     elif moves < 17:
-        return alpha_beta_bitsboard_minimax(observation, configuration)
+        return mcts(observation, configuration)
     else:
         return best(observation, configuration)

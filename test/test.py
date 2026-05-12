@@ -7,12 +7,13 @@ class Observation:
         self.mark = mark
 
 class Configuration:
-    def __init__(self, columns, rows, inarow):
+    def __init__(self, columns, rows, inarow, timeout):
         self.columns = columns
         self.rows = rows
         self.inarow = inarow
+        self.timeout = timeout
 
-configuration = Configuration(7, 6, 4)
+configuration = Configuration(7, 6, 4, 2)
 
 def build_position(move_string):
     observation = Observation([0] * 42, 1)
