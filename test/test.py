@@ -1,4 +1,5 @@
-from main import main
+from src.main import main
+
 import numpy as np
 
 class Observation:

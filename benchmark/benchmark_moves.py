@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 import subprocess
 import time
-from src.alpha_beta_bitsboard_minimax_iterative_deepening_null_window import alpha_beta_bitsboard_minimax_iterative_deepening_null_window
+from src.main import main
 
 TEST_PATHS = ["Test_L1_R1", "Test_L1_R2", "Test_L1_R3", "Test_L2_R1", "Test_L2_R2", "Test_L3_R1"]
 NUMBER_OF_TEST = 1000
@@ -15,12 +15,13 @@ class Observation:
         self.mark = mark
 
 class Configuration:
-    def __init__(self, columns, rows, inarow):
+    def __init__(self, columns, rows, inarow, timeout):
         self.columns = columns
         self.rows = rows
         self.inarow = inarow
+        self.timeout = timeout
 
-configuration = Configuration(7, 6, 4)
+configuration = Configuration(7, 6, 4, 2)
 
 CURRENT_DIR = Path(__file__).resolve().parent
 
@@ -77,7 +78,7 @@ for TEST_PATH in TEST_PATHS:
 
             observation = build_position(position)
 
-            my_move = alpha_beta_bitsboard_minimax_iterative_deepening_null_window(
+            my_move = main(
                 observation,
                 configuration
             )

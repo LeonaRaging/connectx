@@ -1,6 +1,6 @@
-from mcts import mcts
-from best import best
-from opening_book import opening_book
+from .mcts import mcts
+from .best import best
+from .opening_book import opening_book
 
 def main(observation, configuration):
     moves = sum(1 for x in observation.board if x != 0)
