@@ -1,12 +1,12 @@
 # ConnectX Kaggle
 
-A high-performance Connect Four (ConnectX) game solver featuring multiple AI strategies optimized for different game phases. This project combines opening books, Monte Carlo Tree Search (MCTS), and advanced minimax algorithms to create a competitive AI player.
+A high-performance Connect Four (ConnectX) game solver featuring multiple AI strategies optimized for different game phases. This project combines opening books, AlphaZero, and advanced minimax algorithms to create a competitive AI player.
 
 ## Overview
 
 The AI uses a hybrid approach, selecting different strategies based on the game state:
 - **Opening Book** (first 8 moves): Pre-computed optimal moves for early game
-- **MCTS** (moves 8-17): Monte Carlo Tree Search for mid-game play
+- **AlphaZero** (moves 8-17): AlphaZero for mid-game play
 - **Alpha-Beta Minimax** (moves 17+): Advanced minimax with bitboard optimization for endgame
 
 ## Project Structure
@@ -16,7 +16,7 @@ connectx/
 ├── src/
 │   ├── main.py                                    # Main entry point (hybrid strategy selector)
 │   ├── best.py                                    # Alpha-Beta Minimax with Bitboards (endgame)
-│   ├── mcts.py                                    # Monte Carlo Tree Search (mid-game)
+│   ├── submission.py                              # AlphaZero (mid-game)
 │   └── opening_book.py                            # Opening book implementation
 ├── benchmark/
 │   ├── benchmark_moves.py                         # Move generation benchmarks
@@ -42,12 +42,8 @@ The primary endgame solver using:
 - **Transposition Tables**: Memoization of evaluated positions for reuse
 - **Anticipate Losing Moves**: Avoid moves that immediately allow forced wins for the opponent.
 
-### 2. Monte Carlo Tree Search (`mcts.py`)
-Mid-game strategy using:
-- **Tree Exploration**: Balanced UCB (Upper Confidence Bound) calculation
-- **Random Playout**: Simulation of random moves from position
-- **Backpropagation**: Score updates up the tree
-- **Adaptive Time**: Uses available compute time for deeper search
+### 2. AlphaZero (`submission.py`)
+Mid-game strategy using AlphaZero and Monte Carlo Tree Seacrh
 
 ### 3. Opening Book (`opening_book.py`)
 Early game optimization:
